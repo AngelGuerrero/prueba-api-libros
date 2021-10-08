@@ -19,4 +19,4 @@ CREATE TABLE 'books' (
   'updatedAt' DATETIME NULL
 );
 
-INSERT INTO 'users' VALUES ('1', 'master', 'master', date('now'), NULL);
+INSERT INTO 'users' VALUES ('1', 'admin', 'master', date('now'), NULL);

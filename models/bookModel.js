@@ -23,7 +23,21 @@ async function createBook ({ title, year, author }) {
   }
 }
 
+async function searchBook (keyword) {
+  try {
+    const data = await db(table)
+      .where('title', 'like', `%${keyword}%`)
+      .orWhere('author', 'like', `%${keyword}%`)
+      .orWhere('year', 'like', `%${keyword}%`)
+
+    return { message: 'Consulta efectuada correctamente', data }
+  } catch (error) {
+    return { error: true, message: error.message }
+  }
+}
+
 module.exports = {
   getAllBooks,
-  createBook
+  createBook,
+  searchBook
 }
