@@ -1,0 +1,45 @@
+<html lang="es">
+  <head>
+    <title>Applicación de express</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+
+  <body>
+    <h1>Express</h1>
+    <p>Rutas disponibles</p>
+
+    <div id="app">
+      <routes-list-component></routes-list-component>
+    </div>
+  </body>
+
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const baseURL = window.location.href;
+
+    const routesListComponent = {
+      data: () => ({
+        routes: [],
+        baseURL,
+      }),
+
+      created() {
+        fetch(`${baseURL}api/v1/routes`)
+          .then(res => res.json())
+          .then(data => (this.routes = data));
+      },
+
+      template: /*html*/ `
+        <ul>
+          <li v-for="item in routes" :key="item.id">
+            <a v-bind:href="baseURL + item.route">{{ baseURL }}{{ item.route }}</a>
+          </li>
+        </ul>
+      `,
+    };
+
+    Vue.createApp({})
+      .component('routes-list-component', routesListComponent)
+      .mount('#app');
+  </script>
+</html>

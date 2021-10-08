@@ -1,0 +1,27 @@
+[
+  {
+    "route": "",
+    "path": "./controllers/homeController",
+    "requiresAuth": false
+  },
+  {
+    "route": "api/v1/auth",
+    "path": "./controllers/authController",
+    "requiresAuth": false
+  },
+  {
+    "route": "api/v1/routes",
+    "path": "./controllers/routesController",
+    "requiresAuth": false
+  },
+  {
+    "route": "api/v1/users",
+    "path": "./controllers/usersController",
+    "requiresAuth": true
+  },
+  {
+    "route": "api/v1/books",
+    "path": "./controllers/booksController",
+    "requiresAuth": true
+  }
+]
