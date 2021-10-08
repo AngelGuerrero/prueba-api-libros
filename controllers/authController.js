@@ -1,14 +1,15 @@
-const { userExists } = require('../models/userModel')
+const { verifyUserAndPassword } = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const { Router } = require('express')
 const router = Router()
 
 const config = {
-  expiresIn: 30
+  algorithm: 'HS256',
+  expiresIn: '1h'
 }
 
-const signIn = (model) => {
-  const token = jwt.sign({ model }, process.env.TOKEN_KEY, config)
+const signIn = (user) => {
+  const token = jwt.sign(user, process.env.TOKEN_KEY, config)
 
   return { message: 'Token generado correctamente', data: token }
 }
@@ -21,7 +22,7 @@ const signIn = (model) => {
  * que se requiera autenticación.
  */
 router.post('/login', async (req, res) => {
-  let error, message, data
+  let error, message, data, code
 
   const { username, password } = req.body
 
@@ -37,9 +38,9 @@ router.post('/login', async (req, res) => {
   }
 
   //
-  // Verifica que el usuario exista en la bd
-  ({ error, message, data } = await userExists(username, password))
-  if (error || !data) return res.status(404).send({ error, message });
+  // Verifica el usuario y password del usuario en la base de datos.
+  ({ error, message, code } = await verifyUserAndPassword(username, password))
+  if (error) return res.status(code).send({ error, message });
 
   //
   // Genera el token de sesión

@@ -26,24 +26,44 @@ async function createUser ({ username, password }) {
   }
 }
 
-async function userExists (username, password) {
+async function userExists (username) {
   try {
+    const result = await db(table).where('username', username)
+
+    const exists = result && result.length > 0
+
+    const message = exists ? 'ok' : 'Usuario no registrado'
+
+    return { error: !exists, message }
+  } catch (error) {
+    return { error: true, message: error.message }
+  }
+}
+
+async function verifyUserAndPassword (username, password) {
+  let error, message
+
+  try {
+    ({ error, message } = await userExists(username))
+    if (error) return { error, message, code: 404 }
+
     const result = await db(table)
       .where('username', username)
       .where('password', password)
 
-    const exists = result && result.length > 0
+    const valid = result.length > 0
 
-    const message = exists ? 'ok' : 'Usuario no encontrado'
+    message = valid ? 'ok' : 'Password incorrecto'
 
-    return { message, data: exists }
+    return { error: !valid, message, code: valid ? 200 : 404 }
   } catch (error) {
-    return { error: true, message: error.message }
+    return { error: true, message: error.message, code: 401 }
   }
 }
 
 module.exports = {
   getAllUsers,
   createUser,
-  userExists
+  userExists,
+  verifyUserAndPassword
 }

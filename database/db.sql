@@ -18,3 +18,5 @@ CREATE TABLE 'books' (
   'createdAt' DATETIME,
   'updatedAt' DATETIME NULL
 );
+
+INSERT INTO 'users' VALUES ('1', 'master', 'master', date('now'), NULL);
